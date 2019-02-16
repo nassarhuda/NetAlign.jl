@@ -8,14 +8,14 @@ xbest,st,status,hist = netalignmr(S,w,a,b,li,lj)
 ma,mb = edge_list(bipartite_matching(xbest,li,lj))
 ```
 current supported algorithms:
--netalignmr
--netalignbp
--isornak
--TAME
--NSD
+*netalignmr
+*netalignbp
+*isornak
+*TAME
+*NSD
 
 Type `?<algorithm_name>` for more info
 
 Up next:
--EigenAlign
--LowRankEigenAlig
+*EigenAlign
+*LowRankEigenAlign
