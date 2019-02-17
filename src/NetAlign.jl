@@ -1,7 +1,8 @@
-module NetworkAlign
+module NetAlign
 
 using MatrixNetworks
 using LinearAlgebra
+using SparseArrays
 using KahanSummation
 using Printf
 
