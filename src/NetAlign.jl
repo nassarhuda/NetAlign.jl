@@ -32,5 +32,6 @@ include("utils.jl")
 include("triangles.jl")
 
 export load_netalign_problem,netalign_datasets,netalignmr,isorank,
-		netalignbp, make_squares, netalign_setup, build_Si
+		netalignbp, make_squares, netalign_setup, build_Si,
+		NSD, NSD_lowrank, TAME, cTAME
 end
