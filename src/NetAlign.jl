@@ -12,7 +12,7 @@ Module ``NetworkAlign``: Network Alignment package in Julia
 You can check the package page and readme file here: \n
 "https://github.com/nassarhuda/NetAlign.jl"
 """
-NetworkAlign
+NetAlign
 
 
 include("othermaxplus.jl")
