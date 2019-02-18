@@ -7,7 +7,7 @@ using KahanSummation
 using Printf
 
 """
-Module ``NetworkAlign``: Network Alignment package in Julia
+Module ``NetAlign``: Network Alignment package in Julia
 
 You can check the package page and readme file here: \n
 "https://github.com/nassarhuda/NetAlign.jl"
@@ -28,6 +28,8 @@ include("netalign_setup.jl")
 include("NSD.jl")
 include("TAME.jl")
 include("evaluations.jl")
+include("utils.jl")
+include("triangles.jl")
 
 export load_netalign_problem,netalign_datasets,netalignmr,isorank,
 		netalignbp, make_squares, netalign_setup, build_Si
