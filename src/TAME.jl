@@ -34,7 +34,7 @@ function TAME(G::SparseMatrixCSC{Int64,Int64},H::SparseMatrixCSC{Int64,Int64})
 	nG = size(G,1)
 	nH = size(H,1)
 	w = ones(nG*nH)./(nG*nH)
-	maxiter = 1000
+	maxiter = 10
 	tol = 1e-12
 	β = 1.0
 	return TAME(G,H,w,β,nG,nH,maxiter,tol)
@@ -43,7 +43,7 @@ function cTAME(G::SparseMatrixCSC{Int64,Int64},H::SparseMatrixCSC{Int64,Int64})
 	nG = size(G,1)
 	nH = size(H,1)
 	w = ones(nG*nH)./(nG*nH)
-	maxiter = 1000
+	maxiter = 10
 	tol = 1e-12
 	β = 1.0
 	return cTAME(G,H,w,β,nG,nH,maxiter,tol)
