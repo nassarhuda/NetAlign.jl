@@ -63,7 +63,7 @@ function TAME(G::SparseMatrixCSC{Int64,Int64},H::SparseMatrixCSC{Int64,Int64},w:
 		xnew ./= norm(xnew,1)
 		Xmat = reshape(xnew,nG,nH)
 		curscore = score_fn(Xmat,G,H)
-		if curscore > bestscore
+		if curscore >= bestscore
 			bestscore = curscore
 			Xbest = Xmat
 		end
@@ -97,7 +97,7 @@ function cTAME(G::SparseMatrixCSC{Int64,Int64},H::SparseMatrixCSC{Int64,Int64},w
 		xnew ./= norm(xnew,1)
 		Xmat = reshape(xnew,nG,nH)
 		curscore = score_fn(Xmat,G,H)
-		if curscore > bestscore
+		if curscore >= bestscore
 			bestscore = curscore
 			Xbest = Xmat
 		end
