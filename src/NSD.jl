@@ -39,7 +39,7 @@ Network Similarity Decomposition (NSD)
     X = NSD(A,B,0.8,10,ones(size(A,1)),ones(size(A,1)))
     ma,mb = edge_list(bipartite_matching(sparse(X))
 """
-function NSD(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alpha,iters,Zvecs::Array{Float64,2},Wvecs::Array{Float64,2})
+function NSD(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},alpha,iters,Zvecs::Array{Float64,2},Wvecs::Array{Float64,2})
   A = _normout_rowstochastic(A)
   B = _normout_rowstochastic(B)
   nB = size(B,1)
@@ -79,7 +79,7 @@ function NSD(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alp
   return GlobalSim
 end
 
-function NSD_lowrank(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alpha,iters,Zvecs::Array{Float64,2},Wvecs::Array{Float64,2})
+function NSD_lowrank(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},alpha,iters,Zvecs::Array{Float64,2},Wvecs::Array{Float64,2})
   A = _normout_rowstochastic(A)
   B = _normout_rowstochastic(B)
   nB = size(B,1)
@@ -121,7 +121,7 @@ function NSD_lowrank(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,In
   end
   return GlobalFactorA,GlobalFactorB
 end
-function NSD(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alpha,iters,z::Vector{Float64},w::Vector{Float64})
+function NSD(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},alpha,iters,z::Vector{Float64},w::Vector{Float64})
 	A = _normout_rowstochastic(A)
   B = _normout_rowstochastic(B)
   m = size(B,1)
@@ -161,7 +161,7 @@ function NSD(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alp
 end
 
 
-function NSD_lowrank(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},alpha,iters,z,w)
+function NSD_lowrank(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},alpha,iters,z,w)
   A = _normout_rowstochastic(A)
   B = _normout_rowstochastic(B)
   m = size(B,1)

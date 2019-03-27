@@ -1,7 +1,7 @@
 """
 creates a column stochastic matrix
 """
-function _normout_colstochastic(P::SparseArrays.SparseMatrixCSC{T,Int64}) where T
+function _normout_colstochastic(P::SparseArrays.SparseMatrixCSC{T,Int}) where T
 	n = size(P,1)
 	colsums = sum(P,dims=2)
 	pi,pj,pv = findnz(P)
@@ -10,7 +10,7 @@ end
 """
 creates a row stochastic matrix
 """
-function _normout_rowstochastic(P::SparseArrays.SparseMatrixCSC{T,Int64}) where T
+function _normout_rowstochastic(P::SparseArrays.SparseMatrixCSC{T,Int}) where T
 	n = size(P,1)
 	colsums = sum(P,dims=2)
 	pi,pj,pv = findnz(P)

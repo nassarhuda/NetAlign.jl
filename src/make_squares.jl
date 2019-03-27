@@ -1,7 +1,7 @@
 # % MAKE_SQUARES Returns a list of all the squares between A, B, and L
 # Se,Le,LEw = make_squares(A,B,L,true); Si = build_Si(Se,Le);
-function make_squares(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},
-                        L::SparseMatrixCSC{Int64,Int64},undirected::Bool)
+function make_squares(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},
+                        L::SparseMatrixCSC{Int,Int},undirected::Bool)
 
 
 m = size(A,1)
@@ -29,10 +29,10 @@ rpAB = L.colptr
 ciAB = L.rowval
 vAB = L.nzval
 
-Se1 = Int64[]
-Se2 = Int64[]
+Se1 = Int[]
+Se2 = Int[]
 
-wv = zeros(Int64,n)
+wv = zeros(Int,n)
 sqi = 0
 @inbounds for i=1:m
     # label everything in to i in B
@@ -70,7 +70,7 @@ sqi = 0
     wv[ciAB[possible_matches]] .= 0
 end
 
-Le = zeros(Int64,nnz(L),3)    
+Le = zeros(Int,nnz(L),3)    
 LeWeights = zeros(Float64,nnz(L))    
 @inbounds for i = 1:m
     j = rpAB[i]:rpAB[i+1]-1
@@ -79,14 +79,14 @@ LeWeights = zeros(Float64,nnz(L))
     LeWeights[j] .= vAB[j]
 end
 
-Se = zeros(Int64,length(Se1),2)
+Se = zeros(Int,length(Se1),2)
 Se[:,1] .= Se1
 Se[:,2] .= Se2
 return (Se,Le,LeWeights)
 end
 
-function make_squares(A::SparseMatrixCSC{Int64,Int64},B::SparseMatrixCSC{Int64,Int64},
-                        L::SparseMatrixCSC{Float64,Int64},undirected::Bool)
+function make_squares(A::SparseMatrixCSC{Int,Int},B::SparseMatrixCSC{Int,Int},
+                        L::SparseMatrixCSC{Float64,Int},undirected::Bool)
 
 
 m = size(A,1)
@@ -114,10 +114,10 @@ rpAB = L.colptr
 ciAB = L.rowval
 vAB = L.nzval
 
-Se1 = Int64[]
-Se2 = Int64[]
+Se1 = Int[]
+Se2 = Int[]
 
-wv = zeros(Int64,n)
+wv = zeros(Int,n)
 sqi = 0
 @inbounds for i=1:m
     # label everything in to i in B
@@ -155,7 +155,7 @@ sqi = 0
     wv[ciAB[possible_matches]] .= 0
 end
 
-Le = zeros(Int64,nnz(L),2)    
+Le = zeros(Int,nnz(L),2)    
 LeWeights = zeros(Float64,nnz(L))    
 @inbounds for i = 1:m
     j = rpAB[i]:rpAB[i+1]-1
@@ -164,17 +164,17 @@ LeWeights = zeros(Float64,nnz(L))
     LeWeights[j] .= vAB[j]
 end
 
-Se = zeros(Int64,length(Se1),2)
+Se = zeros(Int,length(Se1),2)
 Se[:,1] .= Se1
 Se[:,2] .= Se2
 return (Se,Le,LeWeights)
 end
 
-function build_Si(Se::Array{Int64,2},Le::Array{Int64,2})
+function build_Si(Se::Array{Int,2},Le::Array{Int,2})
 # to build Si
 Se1 = Se[:,1]
 Se2 = Se[:,2]
-Si = zeros(Int64,4,length(Se1))
+Si = zeros(Int,4,length(Se1))
 for i = 1:length(Se1)
     Si[1,i] = Le[Se2[i],1]
     Si[2,i] = Le[Se1[i],1]

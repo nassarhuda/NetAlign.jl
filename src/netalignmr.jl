@@ -35,9 +35,9 @@ NETALIGNMR
     xbest,st,status,hist = netalignmr(S,w,a,b,li,lj)
     ma,mb = edge_list(bipartite_matching(xbest,li,lj))
 """
-function netalignmr(S::SparseMatrixCSC{Int64,Int64},w::Vector{Float64},
-                       a::Int64,b::Int64,li::Vector{Int64},lj::Vector{Int64},
-                        gamma::Float64=0.25,stepm::Int64=25,rtype::Int64=1,maxiter::Int64=1000,verbose::Bool=false)
+function netalignmr(S::SparseMatrixCSC{Int,Int},w::Vector{Float64},
+                       a::Int,b::Int,li::Vector{Int},lj::Vector{Int},
+                        gamma::Float64=0.25,stepm::Int=25,rtype::Int=1,maxiter::Int=1000,verbose::Bool=false)
 
   m = maximum(li)
   n = maximum(lj)

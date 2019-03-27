@@ -1,31 +1,31 @@
 mutable struct one_matching_output
     q::Float64
-    mi::Vector{Int64}
+    mi::Vector{Int}
 end
 
 mutable struct all_matching_output
     q::Vector{Float64}
-    mi::Vector{Int64}
-    mj::Vector{Int64}
-    medges::Int64
+    mi::Vector{Int}
+    mj::Vector{Int}
+    medges::Int
 end
 
-function intmatch(n::Int64,m::Int64,nedges::Int64,
-                v1::Vector{Int64},v2::Vector{Int64},weight::Vector{Float64})
+function intmatch(n::Int,m::Int,nedges::Int,
+                v1::Vector{Int},v2::Vector{Int},weight::Vector{Float64})
 
 
 l1 = zeros(Float64,n)
 l2 = zeros(Float64,n+m)
-s = ones(Int64,n+m)
-t = -1*ones(Int64,n+m)
-offset = zeros(Int64,n)
-deg = ones(Int64,n)
-list = zeros(Int64,nedges+n)
-index = zeros(Int64,nedges+n)
+s = ones(Int,n+m)
+t = -1*ones(Int,n+m)
+offset = zeros(Int,n)
+deg = ones(Int,n)
+list = zeros(Int,nedges+n)
+index = zeros(Int,nedges+n)
 w = zeros(Float64,nedges+n)
-match1 = -1*ones(Int64,n)
-match2 = -1*ones(Int64,n+m)
-tmod = zeros(Int64,m+n)
+match1 = -1*ones(Int,n)
+match2 = -1*ones(Int,n+m)
+tmod = zeros(Int,m+n)
 ntmod = 0
 
 for i = 1:nedges
@@ -138,7 +138,7 @@ for i = 1:n
     end
 end
 
-mi = zeros(Int64,nedges)
+mi = zeros(Int,nedges)
 for i = 1:n
     if match1[i]<=m
         for j = 0:deg[i]-1
@@ -153,8 +153,8 @@ return one_matching_output(ret,mi)
 end
 
 
-function column_maxmatchsum(M::Int64,N::Int64,Qp::Vector{Int64},Qr::Vector{Int64},Qv::Vector{Float64},
-                                m::Int64,n::Int64,nedges::Int64,li::Vector{Int64},lj::Vector{Int64})
+function column_maxmatchsum(M::Int,N::Int,Qp::Vector{Int},Qr::Vector{Int},Qv::Vector{Float64},
+                                m::Int,n::Int,nedges::Int,li::Vector{Int},lj::Vector{Int})
 
 minnm = n
 if m<minnm
@@ -162,15 +162,15 @@ if m<minnm
 end
 
 q = zeros(Float64,N)
-mi = zeros(Int64,Qp[N]-1)
-mj = zeros(Int64,Qp[N]-1)
+mi = zeros(Int,Qp[N]-1)
+mj = zeros(Int,Qp[N]-1)
 
 medges = 1
 
-lwork1 = ones(Int64,m)
-lind1 = -1*ones(Int64,m)
-lwork2 = ones(Int64,n)
-lind2 = -1*ones(Int64,n)
+lwork1 = ones(Int,m)
+lind1 = -1*ones(Int,m)
+lwork2 = ones(Int,n)
+lind2 = -1*ones(Int,n)
 
 max_col_nonzeros = 0
 for j = 1:N
@@ -180,11 +180,11 @@ for j = 1:N
     end
 end
 
-se1 = zeros(Int64,max_col_nonzeros)
-se2 = zeros(Int64,max_col_nonzeros)
+se1 = zeros(Int,max_col_nonzeros)
+se2 = zeros(Int,max_col_nonzeros)
 sw = zeros(Float64,max_col_nonzeros)
-sqi = zeros(Int64,max_col_nonzeros)
-sqj = zeros(Int64,max_col_nonzeros)
+sqi = zeros(Int,max_col_nonzeros)
+sqj = zeros(Int,max_col_nonzeros)
 
 for j = 1:N
     smalledges = 1

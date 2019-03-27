@@ -33,10 +33,10 @@ NETALIGNBP
     xbest,st,status,hist = netalignbp(S,w,a,b,li,lj)
     ma,mb = edge_list(bipartite_matching(xbest,li,lj))
 """
-function netalignbp(S::SparseMatrixCSC{T,Int64},w::Vector{F},
-                            a::R,b::K,li::Vector{Int64},
-                            lj::Vector{Int64},gam::Float64=0.99,
-                            dtype::Int64=2,maxiter::Int64=100,verbose::Bool=false) where {T, F, R, K}
+function netalignbp(S::SparseMatrixCSC{T,Int},w::Vector{F},
+                            a::R,b::K,li::Vector{Int},
+                            lj::Vector{Int},gam::Float64=0.99,
+                            dtype::Int=2,maxiter::Int=100,verbose::Bool=false) where {T, F, R, K}
   nedges = length(li)
   nsquares = nnz(S)/2
   m = maximum(li)

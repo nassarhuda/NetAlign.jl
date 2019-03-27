@@ -41,10 +41,10 @@ ISORANK
     x,flag,reshist = isorank(S,w,a,b,li,lj)
     ma,mb = edge_list(bipartite_matching(x,li,lj))
 """
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
-                 alpha::Float64,rtype::Int64,tol::Float64,
-                 maxit::Int64,verbose::Bool,P::SparseMatrixCSC{Float64,Int64}) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
+                 alpha::Float64,rtype::Int,tol::Float64,
+                 maxit::Int,verbose::Bool,P::SparseMatrixCSC{Float64,Int}) where T
   csum = sum_kbn(w)
   v = w./csum
   @assert all(v.>=0)
@@ -123,35 +123,35 @@ function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
   return (x,flag,reshist)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
-                 alpha::Float64,rtype::Int64,tol::Float64,
-                 maxit::Int64,verbose::Bool) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
+                 alpha::Float64,rtype::Int,tol::Float64,
+                 maxit::Int,verbose::Bool) where T
   P = _normout_rowstochastic(S)
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
-                 alpha::Float64,rtype::Int64,tol::Float64,
-                 maxit::Int64) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
+                 alpha::Float64,rtype::Int,tol::Float64,
+                 maxit::Int) where T
   verbose = true
   P = _normout_rowstochastic(S)
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
-                 alpha::Float64,rtype::Int64,tol::Float64) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
+                 alpha::Float64,rtype::Int,tol::Float64) where T
   maxit = 100
   verbose = true
   P = _normout_rowstochastic(S)
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
-                 alpha::Float64,rtype::Int64) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
+                 alpha::Float64,rtype::Int) where T
   tol = 1e-12
   maxit = 100
   verbose = true
@@ -159,8 +159,8 @@ function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64},
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int},
                  alpha::Float64) where T
   rtype = 1
   tol = 1e-12
@@ -170,8 +170,8 @@ function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
-                 a::Float64,b::Float64,li::Vector{Int64},lj::Vector{Int64}) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
+                 a::Float64,b::Float64,li::Vector{Int},lj::Vector{Int}) where T
   alpha = b/(a+b)
   rtype = 1
   tol = 1e-12
@@ -181,7 +181,7 @@ function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64},
                  a::Float64,b::Float64) where T
   li = zeros(Int,0)
   lj = zeros(Int,0)
@@ -194,7 +194,7 @@ function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64},
   return isorank(S,w,a,b,li,lj,alpha,rtype,tol,maxit,verbose,P)
 end
 
-function isorank(S::SparseMatrixCSC{T,Int64},w::Vector{Float64}) where T
+function isorank(S::SparseMatrixCSC{T,Int},w::Vector{Float64}) where T
   a = 0.2
   b = 0.8
   li = zeros(Int,0)

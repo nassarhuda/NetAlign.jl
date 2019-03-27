@@ -1,8 +1,8 @@
 # tested with symmetries = false
 struct tri_struct
-    v::Int64
-    w::Int64
-    x::Int64
+    v1::Int64
+    v2::Int64
+    v3::Int64
 end
 
 struct triangles_iterator
@@ -16,86 +16,14 @@ struct triangles_iterator
     windicator::Vector{Bool}#only needed for the unique case
 end
 
-function next_triangle!(tri::tri_struct,triinfo::tri_struct,
-    S::Union{UnitRange{Int64},Vector{Int64},Int},
-    rp::Vector{Int},
-    ci::Vector{Int},
-    vindicator::Vector{Bool}) 
-    v,w,x = (tri.v,tri.w,tri.x)
-    vi,wi,xi = (triinfo.v,triinfo.w,triinfo.x)
-    # start with checking x
-    wrng = rp[v]:rp[v+1]-1
-    xrng = rp[w]:rp[w+1]-1
-    if xi < length(xrng)
-        xi += 1
-        new_x = ci[xrng[xi]]
-        while vindicator[new_x] == 0 && xi < length(xrng) 
-        # while A[v,new_x] == 0 && xi < length(xrng) 
-            xi += 1
-            new_x = ci[xrng[xi]]
-        end # either A[v,new_x] = 1 or out of spots
-        if vindicator[new_x] != 0
-        # if A[v,new_x] != 0
-            return tri_struct(v,w,new_x),tri_struct(vi,wi,xi)
-        end
-    end
-
-    while wi < length(wrng)
-        wi += 1
-        new_w = ci[wrng[wi]]
-
-        xrng = rp[new_w]:rp[new_w+1]-1
-        xi = 1
-        new_x = ci[xrng[xi]]
-
-        while vindicator[new_x] == 0 && xi < length(xrng) 
-        # while A[v,new_x] == 0 && xi < length(xrng) 
-            xi += 1
-            new_x = ci[xrng[xi]]
-        end
-        if vindicator[new_x]
-        # if A[v,new_x] != 0
-            return tri_struct(v,new_w,new_x),tri_struct(vi,wi,xi)
-        end
-    end
-    while vi < length(S)
-        vi += 1
-        new_v = S[vi]
-        update_vindicator!(vindicator,new_v,rp,ci)
-
-        wrng = rp[new_v]:rp[new_v+1]-1
-        wi = 0
-        while wi < length(wrng)
-            wi += 1
-            new_w = ci[wrng[wi]]
-
-            xrng = rp[new_w]:rp[new_w+1]-1
-            xi = 1
-            new_x = ci[xrng[xi]]
-
-            while vindicator[new_x] == 0 && xi < length(xrng) 
-            # while A[new_v,new_x] == 0 && xi < length(xrng) 
-                xi += 1
-                new_x = ci[xrng[xi]]
-            end
-            if vindicator[new_x]
-            # if A[new_v,new_x] != 0
-                return tri_struct(new_v,new_w,new_x),tri_struct(vi,wi,xi)
-            end
-        end
-    end
-    # if this was reached, no more triangles
-    return tri_struct(0,0,0),tri_struct(0,0,0)
-end
-
 function next_triangle_unique!(tri::tri_struct,triinfo::tri_struct,
     S::Union{UnitRange{Int64},Vector{Int64},Int},
     rp::Vector{Int},
     ci::Vector{Int},
     vindicator::Vector{Bool},
     windicator::Vector{Bool})
-    v,w,x = (tri.v,tri.w,tri.x)
-    vi,wi,xi = (triinfo.v,triinfo.w,triinfo.x)
+    v,w,x = (tri.v1,tri.v2,tri.v3)
+    vi,wi,xi = (triinfo.v1,triinfo.v2,triinfo.v3)
     # start with checking x
     wrng = rp[v]:rp[v+1]-1
     xrng = rp[w]:rp[w+1]-1
@@ -167,13 +95,42 @@ function next_triangle_unique!(tri::tri_struct,triinfo::tri_struct,
     # if this was reached, no more triangles
     return tri_struct(0,0,0),tri_struct(0,0,0)
 end
-
-function triprint(t::tri_struct)
-    @show t.v,t.w,t.x
+function next_triangle!(tri::tri_struct,triinfo::tri_struct,
+    S::Union{UnitRange{Int64},Vector{Int64},Int},
+    rp::Vector{Int},
+    ci::Vector{Int},
+    vindicator::Vector{Bool},
+    windicator::Vector{Bool},
+    step_tri::Int)
+    if step_tri <= 4
+        return _iterate_on_current_triangle(tri,step_tri),triinfo
+    else
+        return next_triangle_unique!(tri_struct(tri.v3,tri.v2,tri.v1),triinfo,S,rp,ci,vindicator,windicator)
+    end
 end
 
-function Base.iterate(iter::triangles_iterator, state=(iter.tri, iter.triinfo))
-    element, elinfo = state
+function triprint(t::tri_struct)
+    @show t.v1,t.v2,t.v3
+end
+
+function _iterate_on_current_triangle(cur_tri::tri_struct,step::Int)
+    # only 5 cases, enumerate
+    if step == 0
+        return tri_struct(cur_tri.v1,cur_tri.v3,cur_tri.v2)
+    elseif step == 1
+        return tri_struct(cur_tri.v3,cur_tri.v1,cur_tri.v2)
+    elseif step == 2
+        return tri_struct(cur_tri.v1,cur_tri.v3,cur_tri.v2)
+    elseif step == 3
+        return tri_struct(cur_tri.v2,cur_tri.v3,cur_tri.v1)
+    elseif step == 4
+        return tri_struct(cur_tri.v1,cur_tri.v3,cur_tri.v2)
+    else 
+        error("This error should not be reached. Step must be 0 <= step <= 4")
+    end
+end
+function Base.iterate(iter::triangles_iterator, state=(iter.tri, iter.triinfo,0))
+    element, elinfo, step_tri = state
 
     if element == tri_struct(0, 0, 0)
         update_vindicator!(iter.vindicator,iter.S[1],iter.rp,iter.ci)
@@ -182,11 +139,13 @@ function Base.iterate(iter::triangles_iterator, state=(iter.tri, iter.triinfo))
     end
 
     if iter.symmetries
-        v1,v2 = next_triangle!(element,elinfo,iter.S,iter.rp,iter.ci,iter.vindicator)
+        v1,v2 = next_triangle!(element,elinfo,iter.S,iter.rp,iter.ci,iter.vindicator,iter.windicator,step_tri)
+        step_tri += 1
+	step_tri %= 6
     else
         v1,v2 = next_triangle_unique!(element,elinfo,iter.S,iter.rp,iter.ci,iter.vindicator,iter.windicator)
     end
-    return (element, (v1,v2))
+    return (element, (v1,v2,step_tri))
 end
 
 function find_first_triangle(S::Union{UnitRange{Int64},Vector{Int64},Int},
@@ -227,7 +186,7 @@ function update_vindicator!(vindicator::Vector{Bool},v::Int,rp::Vector{Int},ci::
     end
 end
 
-# old function:
+# old function: (uses the matrix A)
 # function triangles(A::SparseMatrixCSC{T,Int64},S::Union{UnitRange{Int64},Vector{Int64},Int};symmetries=false) where T
 #     M = MatrixNetwork(A)
 
@@ -255,17 +214,25 @@ end
 sample run:
 -----------
 ```
-using MatrixNetworks
 A = load_matrix_network("clique-10");
 mytriangles = triangles(A)
 for tri in mytriangles
-    triprint(tri)
+    MatrixNetworks.triprint(tri)
 end
 z = collect(mytriangles)
 ei,ej,ek = unzip_triangles(z)
 ```
+A quick example to access the first triangle:
+-------
+```
+julia> tri = first(mytriangles)
+MatrixNetworks.tri_struct(1, 2, 3)
+
+julia> tri.v1,tri.v2,tri.v3
+(1, 2, 3)
+```
 """
-function triangles(M::MatrixNetwork{T},S::Union{UnitRange{Int64},Vector{Int64},Int};symmetries=false) where T
+#=function triangles(M::MatrixNetwork{T},S::Union{UnitRange{Int64},Vector{Int64},Int};symmetries=false) where T
 
     if is_undirected(M) == false
         error("Only undirected (symmetric) inputs are allowed")
@@ -280,7 +247,7 @@ function triangles(M::MatrixNetwork{T},S::Union{UnitRange{Int64},Vector{Int64},I
     first_triangle = v1 #onetriangle(v1[1],v1[2],v1[3])
     first_triangle_info = v2 #onetriangle_info(v2[1],v2[2],v2[3])
     my_tri_iter = triangles_iterator(first_triangle,first_triangle_info,symmetries,S,rp,ci,vindicator,windicator)
-end
+end=#
 function triangles(A::SparseMatrixCSC{T,Int64},S::Union{UnitRange{Int64},Vector{Int64},Int};symmetries=false) where T
 
     if maximum(S) > A.n
@@ -304,7 +271,7 @@ end
 
 # generic functions
 triangles(G::SparseMatrixCSC{T,Int64};symmetries=false) where T = triangles(G,1:size(G,1);symmetries=symmetries)
-triangles(M::MatrixNetwork{T};symmetries=false) where T = triangles(M,1:M.n;symmetries=symmetries)
+#triangles(M::MatrixNetwork{T};symmetries=false) where T = triangles(M,1:M.n;symmetries=symmetries)
 # the following are no longer needed because of the general triangles function above
 # triangles(G::SparseMatrixCSC{T,Int64}) where T = triangles(G,1:size(G,1))
 # triangles(G::SparseMatrixCSC{T,Int64},i::Int64) where T =  triangles(G,i:i)
@@ -314,7 +281,7 @@ import Base.collect
 function collect(tris::triangles_iterator)
     alltriangles = Array{Tuple{Int,Int,Int}}(undef,0)
     for ti in tris
-        push!(alltriangles,(ti.v,ti.w,ti.x))
+        push!(alltriangles,(ti.v1,ti.v2,ti.v3))
     end
     return alltriangles
 end
