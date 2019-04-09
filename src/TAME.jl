@@ -168,7 +168,7 @@ function score_fn(X::Array{Float64,2},A,B)
 	Ap = A[ma,ma]
 	Bp = B[mb,mb]
 	C = Ap.*Bp
-	mytriangles = triangles(A)
+	mytriangles = triangles(C)
 	z = collect(mytriangles)
 	length(z)
 end
