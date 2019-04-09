@@ -29,7 +29,6 @@ include("TAME.jl")
 include("evaluations.jl")
 include("utils.jl")
 include("EigenAlign.jl")
-include("triangles.jl")
 
 export load_netalign_problem,netalign_datasets,netalignmr,isorank,
 		netalignbp, make_squares, netalign_setup, build_Si,
